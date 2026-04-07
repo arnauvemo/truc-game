@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRUC ONLINE</title>
+<style>
+body { font-family: Arial; text-align:center; background: green; color:white; }
+button { margin:5px; padding:10px; }
+</style>
+</head>
+<body>
+
+<h2>🎴 TRUC ONLINE</h2>
+
+<input id="name" placeholder="Nom">
+<input id="room" placeholder="Sala">
+
+<button onclick="create()">Crear sala</button>
+<button onclick="join()">Entrar</button>
+
+<h3>Taula</h3>
+<div id="table"></div>
+
+<h3>Cartes</h3>
+<div id="hand"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+
+</body>
+</html>
