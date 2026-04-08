@@ -49,3 +49,10 @@ function render() {
     });
   }
 }
+function truc() {
+  socket.emit("truc", { code: room });
+}
+
+function retruc() {
+  socket.emit("retruc", { code: room });
+}
