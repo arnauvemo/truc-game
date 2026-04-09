@@ -52,10 +52,41 @@ io.on("connection", (socket) => {
       team: room.players.length % 2
     };
 
-    room.players.push(player);
+   room.players.push(player);
+
+// 🤖 afegir bot si només hi ha 1 jugador
+if (room.players.length === 1) {
+  const bot = {
+    id: "bot",
+    name: "🤖 IA",
+    hand: room.deck.splice(0, 3),
+    team: 1
+  };
+
+  room.players.push(bot);
+}
     socket.join(code);
 
     io.to(code).emit("state", room);
+    // 🤖 torn de la IA
+setTimeout(() => {
+  const bot = room.players.find(p => p.id === "bot");
+  if (!bot) return;
+
+  let bluff = Math.random() < 0.3;
+  let card;
+
+  if (bluff) {
+    card = Math.floor(Math.random() * 12) + 1;
+    console.log("IA fa CATXA 😏");
+  } else {
+    card = bot.hand.pop();
+  }
+
+  room.table.push({ player: "bot", card });
+
+  io.to(code).emit("state", room);
+}, 1500);
   });
 
   socket.on("play", ({ code, card }) => {
@@ -87,6 +118,12 @@ io.on("connection", (socket) => {
     }
 
     io.to(code).emit("state", room);
+ // 🤖 IA pot fer TRUC
+if (Math.random() < 0.2) {
+  room.trucActive = true;
+  room.trickValue = 2;
+  console.log("IA diu TRUC 😏");
+}
   });
 
   socket.on("truc", ({ code }) => {
