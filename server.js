@@ -68,30 +68,38 @@ if (room.players.length === 1) {
     socket.join(code);
 
     io.to(code).emit("state", room);
-    // 🤖 torn de la IA
-setTimeout(() => {
-  const bot = room.players.find(p => p.id === "bot");
-  if (!bot) return;
-
-  let bluff = Math.random() < 0.3;
-  let card;
-
-  if (bluff) {
-    card = Math.floor(Math.random() * 12) + 1;
-    console.log("IA fa CATXA 😏");
-  } else {
-    card = bot.hand.pop();
-  }
-
-  room.table.push({ player: "bot", card });
-
-  io.to(code).emit("state", room);
-}, 1500);
   });
 
-  socket.on("play", ({ code, card }) => {
-    const room = rooms[code];
-    if (!room) return;
+ socket.on("play", ({ code, card }) => {
+  const room = rooms[code];
+  if (!room) return;
+
+  const player = room.players.find(p => p.id === socket.id);
+  if (player) {
+    player.hand = player.hand.filter(c => c !== card);
+  }
+
+  room.table.push({ player: socket.id, card });
+
+  io.to(code).emit("state", room);
+
+  // 🤖 IA juga DESPRÉS del jugador
+  setTimeout(() => {
+    const bot = room.players.find(p => p.id === "bot");
+    if (!bot) return;
+
+    if (bot.hand.length === 0) return;
+
+    const index = Math.floor(Math.random() * bot.hand.length);
+    const botCard = bot.hand.splice(index, 1)[0];
+
+    room.table.push({ player: "bot", card: botCard });
+
+    io.to(code).emit("state", room);
+
+  }, 1500);
+
+});
 
     room.table.push({ player: socket.id, card });
 
