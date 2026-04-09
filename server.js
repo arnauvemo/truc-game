@@ -70,7 +70,7 @@ if (room.players.length === 1) {
     io.to(code).emit("state", room);
   });
 
- socket.on("play", ({ code, card }) => {
+socket.on("play", ({ code, card }) => {
   const room = rooms[code];
   if (!room) return;
 
@@ -83,12 +83,12 @@ if (room.players.length === 1) {
 
   io.to(code).emit("state", room);
 
-  // 🤖 IA juga DESPRÉS del jugador
+  // 🤖 IA juga bé
   setTimeout(() => {
     const bot = room.players.find(p => p.id === "bot");
     if (!bot) return;
 
-    if (bot.hand.length === 0) return;
+    if (!bot.hand || bot.hand.length === 0) return;
 
     const index = Math.floor(Math.random() * bot.hand.length);
     const botCard = bot.hand.splice(index, 1)[0];
@@ -99,6 +99,7 @@ if (room.players.length === 1) {
 
   }, 1500);
 
+});
 });
 
     room.table.push({ player: socket.id, card });
