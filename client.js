@@ -34,7 +34,7 @@ function render() {
   if (!state) return;
 
   document.getElementById("table").innerHTML =
-    state.table.map(c => "🃏" + c).join(" ");
+    state.table.map(c => "🃏" + c.card).join(" ");
 
   const me = state.players.find(p => p.name === name);
 
